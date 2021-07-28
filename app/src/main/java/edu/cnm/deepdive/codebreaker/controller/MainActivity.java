@@ -54,17 +54,29 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     boolean handled = true;
-    //noinspection SwitchStatementWithTooFewBranches
     switch (item.getItemId()) {
       // TODO specify case ids from options menu
       case R.id.settings_option:
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        openSettings();
+        break;
+      case R.id.sign_out:
+        switchToLogin();
         break;
       default:
         handled = super.onOptionsItemSelected(item);
     }
     return handled;
+  }
+
+  private void switchToLogin() {
+    Intent intent = new Intent(this, LoginActivity.class)
+        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
+  }
+
+  private void openSettings() {
+    Intent intent = new Intent(this, SettingsActivity.class);
+    startActivity(intent);
   }
 
 }
