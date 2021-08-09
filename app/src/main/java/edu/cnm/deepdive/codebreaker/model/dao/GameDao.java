@@ -73,4 +73,11 @@ public interface GameDao {
       + "ORDER BY (s.created - g.created) ASC, s.guess_count ASC")
   LiveData<List<GameWithGuesses>> selectTopScoresByTime(int length, int poolSize);
 
+  @Transaction
+  @Query("SELECT g.* "
+      + "FROM game AS g "
+      + "WHERE g.length = :length AND g.pool_size = :poolSize and g.solved "
+      + "ORDER BY g.created DESC")
+  LiveData<List<GameWithGuesses>> selectHistory(int length, int poolSize);
+
 }

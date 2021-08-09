@@ -8,4 +8,9 @@
     android:title="@string/settings_label"
     app:showAsAction="never"/>
 
+  <item
+    android:id="@+id/sign_out"
+    android:title="@string/sign_out_title"
+    app:showAsAction="never"/>
+
 </menu>

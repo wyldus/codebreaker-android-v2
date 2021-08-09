@@ -2,6 +2,16 @@ plugins {
     id 'com.android.application'
 }
 
+static def getProperty(String filename, String property) {
+    Properties properties = new Properties()
+    properties.load(new FileInputStream(filename))
+    return properties.getProperty(property)
+}
+
+static def quoted(String value) {
+    return "\"${value}\""
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -14,6 +24,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def connectionProperties = "$projectDir/../../../services/codebreaker.properties"
+
+        buildConfigField 'String', 'CLIENT_ID',
+                quoted(getProperty(connectionProperties, 'client_id'))
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -89,6 +104,9 @@ dependencies {
 
     // OkHttp library
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+
+    // Google Sign-In library
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
     // Stetho (inspection) library
     implementation 'com.facebook.stetho:stetho:1.5.1'
