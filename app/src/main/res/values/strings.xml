@@ -48,4 +48,8 @@
     <item>&#x1F682;</item> <!-- bicycle -->
   </string-array>
 
+  <string name="start_format">&#x2022; Started: %1$s %2$s</string>
+  <string name="attempts_format">&#x2022; Attempts: %,d</string>
+  <string name="elapsed_time_format">&#x2022; Elapsed time: %1$02d:%2$02d:%3$02d</string>
+
 </resources>

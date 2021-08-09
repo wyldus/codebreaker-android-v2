@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.snackbar.Snackbar;
 import edu.cnm.deepdive.codebreaker.R;
+import edu.cnm.deepdive.codebreaker.service.GoogleSignInService;
 import edu.cnm.deepdive.codebreaker.viewmodel.GameViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         openSettings();
         break;
       case R.id.sign_out:
-        switchToLogin();
+        signOut();
         break;
       default:
         handled = super.onOptionsItemSelected(item);
@@ -68,10 +69,15 @@ public class MainActivity extends AppCompatActivity {
     return handled;
   }
 
-  private void switchToLogin() {
-    Intent intent = new Intent(this, LoginActivity.class)
-        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    startActivity(intent);
+  private void signOut() {
+    GoogleSignInService
+        .getInstance()
+        .signOut()
+        .addOnCompleteListener((ignored) -> {
+          Intent intent = new Intent(this, LoginActivity.class)
+              .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+          startActivity(intent);
+        });
   }
 
   private void openSettings() {

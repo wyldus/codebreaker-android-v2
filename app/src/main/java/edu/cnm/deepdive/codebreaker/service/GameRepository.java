@@ -31,16 +31,16 @@ public class GameRepository {
     return (
         (game.getId() == 0)
             ? proxy
-                .startGame(game)
-                .flatMap((receivedGame) -> {
-                  receivedGame.setPoolSize((int) receivedGame.getPool().codePoints().count());
-                  return gameDao
-                      .insert(receivedGame)
-                      .map((id) -> {
-                        receivedGame.setId(id);
-                        return receivedGame;
-                      });
-                })
+            .startGame(game)
+            .flatMap((receivedGame) -> {
+              receivedGame.setPoolSize((int) receivedGame.getPool().codePoints().count());
+              return gameDao
+                  .insert(receivedGame)
+                  .map((id) -> {
+                    receivedGame.setId(id);
+                    return receivedGame;
+                  });
+            })
             : gameDao
                 .update(game)
                 .map((count) -> game)
@@ -67,25 +67,25 @@ public class GameRepository {
     return (
         (guess.getId() == 0)
             ? proxy
-                .submitGuess(game.getServiceKey(), guess)
-                .map((receivedGuess) -> {
-                  receivedGuess.setGameId(game.getId());
-                  return receivedGuess;
-                })
-                .flatMap((receivedGuess) -> {
-                  Single<Guess> task;
-                  if (receivedGuess.isSolution()) {
-                    game.setSolved(true);
-                    task = gameDao
-                        .update(game)
-                        .map((count) -> receivedGuess);
-                  } else {
-                    task = Single.just(receivedGuess);
-                  }
-                  return task;
-                })
-                .flatMap(guessDao::insert)
-                .map((id) -> game)
+            .submitGuess(game.getServiceKey(), guess)
+            .map((receivedGuess) -> {
+              receivedGuess.setGameId(game.getId());
+              return receivedGuess;
+            })
+            .flatMap((receivedGuess) -> {
+              Single<Guess> task;
+              if (receivedGuess.isSolution()) {
+                game.setSolved(true);
+                task = gameDao
+                    .update(game)
+                    .map((count) -> receivedGuess);
+              } else {
+                task = Single.just(receivedGuess);
+              }
+              return task;
+            })
+            .flatMap(guessDao::insert)
+            .map((id) -> game)
             : guessDao
                 .update(guess)
                 .map((count) -> game)
@@ -99,6 +99,10 @@ public class GameRepository {
 
   public LiveData<List<GameWithGuesses>> getScoreboardTime(int codeLength, int poolSize) {
     return gameDao.selectTopScoresByTime(codeLength, poolSize);
+  }
+
+  public LiveData<List<GameWithGuesses>> getHistory(int codeLength, int poolSize) {
+    return gameDao.selectHistory(codeLength, poolSize);
   }
 
 }
